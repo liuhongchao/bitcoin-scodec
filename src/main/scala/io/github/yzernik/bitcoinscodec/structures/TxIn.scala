@@ -3,6 +3,7 @@ package io.github.yzernik.bitcoinscodec.structures
 import scodec.Codec
 import scodec.bits.ByteVector
 import scodec.codecs._
+import io.github.yzernik.bitcoinscodec.util.Util._
 
 case class TxIn(
   previous_output: OutPoint,
@@ -19,7 +20,7 @@ object TxIn {
   implicit val codec: Codec[TxIn] = {
     ("previous_output" | Codec[OutPoint]) ::
       ("sig_script" | scriptCodec) ::
-      ("sequence" | uint32)
+      ("sequence" | customerizedUint32)
   }.as[TxIn]
 
 }

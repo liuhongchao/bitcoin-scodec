@@ -2,7 +2,7 @@ name := "bitcoin-scodec"
 
 organization := "io.github.yzernik"
 
-version := "0.2.9-hc"
+version := "0.2.9-hc-3"
 
 scalaVersion := "2.12.3"
 

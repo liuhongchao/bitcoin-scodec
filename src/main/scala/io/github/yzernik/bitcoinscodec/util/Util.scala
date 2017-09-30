@@ -18,9 +18,9 @@ object Util {
     byteBuffer.getLong()
   }
 
-  def hash(bytes: Array[Byte]): Hash = {
+  def hash(bytes: Array[Byte]): CustomizedHash = {
     val hash = hashBytes(bytes)
-    Hash(ByteVector(hash).reverse)
+    CustomizedHash(ByteVector(hash).reverse)
   }
 
   def hashBytes(bytes: Array[Byte]): Array[Byte] = {
