@@ -3,8 +3,10 @@ package io.github.yzernik.bitcoinscodec.util
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.security.MessageDigest
-import scodec.bits.ByteVector
+
+import scodec.bits.{ByteOrdering, ByteVector}
 import io.github.yzernik.bitcoinscodec.structures.Hash
+import scodec.Codec
 
 object Util {
 
@@ -28,4 +30,6 @@ object Util {
     hash2
   }
 
+
+  val customerizedUint32: Codec[Long] = new CustomizedLongCodec(32, false, ByteOrdering.BigEndian)
 }
