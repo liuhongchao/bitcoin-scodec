@@ -41,8 +41,8 @@ CD 1C BE A6 E7 45 8A 7A  BA D5 12 A9 D9 EA 1A FB
         tx_out = List(),
         witness_scripts = List(),
         lock_time = 12345L)
-      roundtrip(Tx.codec(1), tx1)
-      roundtrip(Message.codec(0xDAB5BFFAL, 1), tx1)
+      roundtrip(Tx.codec(0), tx1)
+      roundtrip(Message.codec(0xDAB5BFFAL, 0), tx1)
 
     }
 
@@ -52,7 +52,7 @@ CD 1C BE A6 E7 45 8A 7A  BA D5 12 A9 D9 EA 1A FB
         TxIn(
           previous_output = OutPoint(Hash(hex"6dbddb085b1d8af75184f0bc01fad58d1266e9b63b50881990e4b40d6aee3629".reverse), 0),
           sig_script = hex"483045022100f3581e1972ae8ac7c7367a7a253bc1135223adb9a468bb3a59233f45bc578380022059af01ca17d00e41837a1d58e97aa31bae584edec28d35bd96923690913bae9a0141049c02bfc97ef236ce6d8fe5d94013c721e915982acd2b12b65d9b7d59e20a842005f8fc4e02532e873d37b96f09d6d4511ada8f14042f46614a4c70c0f14beff5",
-          witness_script = ByteVector.empty,
+          witness_script = List.empty,
           sequence = 4294967295L
         )
       )
@@ -79,7 +79,7 @@ CD 1C BE A6 E7 45 8A 7A  BA D5 12 A9 D9 EA 1A FB
         lock_time = locktime
       )
 
-      shouldDecodeFullyTo(Tx.codec(1), bytes.toBitVector, tx)
+      shouldDecodeFullyTo(Tx.codec(0), bytes.toBitVector, tx)
     }
 
   }

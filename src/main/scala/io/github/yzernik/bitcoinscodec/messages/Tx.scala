@@ -1,7 +1,8 @@
 package io.github.yzernik.bitcoinscodec.messages
 
 import io.github.yzernik.bitcoinscodec.structures._
-import scodec.Codec
+import scodec.Attempt.Failure
+import scodec.{Codec, Err}
 import scodec.bits.{BitVector, ByteVector}
 import scodec.codecs._
 
@@ -11,7 +12,7 @@ case class Tx(
   flags: Option[Int],
   tx_in: List[TxIn],
   tx_out: List[TxOut],
-  witness_scripts: List[ByteVector],
+  witness_scripts: List[List[ByteVector]],
   lock_time: Long
 ) extends Message {
   type E = Tx
@@ -31,7 +32,7 @@ object Tx extends MessageCompanion[Tx] {
       ("flags" | conditional(false, uint8)) ::
       ("tx_in" | VarList.varList(Codec[TxIn])) ::
       ("tx_out" | VarList.varList(Codec[TxOut])) ::
-      ("witness_scripts" | listOfN(provide(0), Codec[ByteVector])) ::
+      ("witness_scripts" | listOfN(provide(0), VarList.varList(Codec[ByteVector]))) ::
       ("lock_time" | uint32L)
   }.as[Tx]
 
@@ -41,7 +42,7 @@ object Tx extends MessageCompanion[Tx] {
       ("flags" | conditional(true, uint8)) ::
       VarList.varList(Codec[TxIn]).flatPrepend { txIns =>
         ("tx_out" | VarList.varList(Codec[TxOut])) ::
-          ("witness_scripts" | listOfN(provide(txIns.length), Codec[ByteVector])) ::
+          ("witness_scripts" | listOfN(provide(txIns.length), VarList.varList(Codec[ByteVector]))) ::
           ("lock_time" | uint32L)
       }
   }.as[Tx]
@@ -52,10 +53,22 @@ object Tx extends MessageCompanion[Tx] {
 
     Codec(
       (transaction: Tx) => {
-        txWithWitnessCodec.encode(transaction).orElse(txWithoutWitnessCodec.encode(transaction))
+        if (version == 0) {
+          txWithoutWitnessCodec.encode(transaction)
+        } else if (version == 1) {
+          txWithWitnessCodec.encode(transaction)
+        } else {
+          Failure(Err(s"version $version not supported"))
+        }
       },
       (bitVector: BitVector) => {
-        txWithWitnessCodec.decode(bitVector).orElse(txWithoutWitnessCodec.decode(bitVector))
+        if (version == 0) {
+          txWithoutWitnessCodec.decode(bitVector)
+        } else if (version == 1) {
+          txWithWitnessCodec.decode(bitVector)
+        } else {
+          Failure(Err(s"version $version not supported"))
+        }
       }
     )
   }.as[Tx]

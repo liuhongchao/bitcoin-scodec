@@ -8,12 +8,12 @@ import io.github.yzernik.bitcoinscodec.util.Util._
 case class TxIn(
   previous_output: OutPoint,
   sig_script: ByteVector,
-  witness_script: ByteVector,
+  witness_script: List[ByteVector],
   sequence: Long)
 
 object TxIn {
 
-  val scriptCodec = {
+  implicit val scriptCodec = {
     val countCodec = VarInt.varIntCodec.xmap(_.toInt, (i: Int) => i.toLong)
     variableSizeBytes(countCodec, bytes)
   }
@@ -21,7 +21,7 @@ object TxIn {
   implicit val codec: Codec[TxIn] = {
     ("previous_output" | Codec[OutPoint]) ::
       ("sig_script" | scriptCodec) ::
-      ("witness_script" | bytes(0)) ::
+      ("witness_script" | listOfN(provide(0), Codec[ByteVector])) ::
       ("sequence" | customerizedUint32)
   }.as[TxIn]
 

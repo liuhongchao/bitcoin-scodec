@@ -10,12 +10,12 @@ class TxInSpec extends CodecSuite {
 
     "roundtrip" in {
       roundtrip(TxIn(
-        OutPoint(
+        previous_output = OutPoint(
           Hash(ByteVector.fill(32)(0x42)),
           55555L),
-        ByteVector(0x123456),
-        ByteVector.empty,
-        111111L))
+        sig_script = ByteVector(0x123456),
+        witness_script = List.empty,
+        sequence = 111111L))
     }
 
     "decode" in {
@@ -31,7 +31,7 @@ class TxInSpec extends CodecSuite {
             20a842005f8fc4e02532e873d37b96f09d6d4511ada8f14042f46614a4c
             70c0f14beff5        
           """,
-        witness_script = ByteVector.empty,
+        witness_script = List.empty,
         sequence = 4294967295L
       )
 
