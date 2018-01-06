@@ -88,7 +88,7 @@ object Message {
 object MessageCompanion {
   val all: Set[MessageCompanion[_ <: Message]] = Set(Addr, Alert, Block, GetAddr, GetBlocks,
     GetData, GetHeaders, Headers, Inv, MemPool, NotFound, Ping, Pong, Reject,
-    Tx, Verack, Version)
+    RegularTx, Verack, Version)
   val byCommand: Map[ByteVector, MessageCompanion[_ <: Message]] = {
     require(all.map(_.command).size == all.size, "Type headers must be unique.")
     all.map { companion => Message.padCommand(companion.command) -> companion }.toMap

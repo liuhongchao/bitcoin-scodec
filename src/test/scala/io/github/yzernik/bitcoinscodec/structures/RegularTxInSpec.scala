@@ -4,7 +4,7 @@ import io.github.yzernik.bitcoinscodec.CodecSuite
 import scodec.bits.ByteVector
 import scodec.bits._
 
-class TxInSpec extends CodecSuite {
+class RegularTxInSpec extends CodecSuite {
 
   import TxIn._
 

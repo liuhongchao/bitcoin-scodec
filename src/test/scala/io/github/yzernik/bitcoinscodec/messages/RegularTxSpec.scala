@@ -6,9 +6,9 @@ import scodec.bits._
 import scodec.codecs._
 import io.github.yzernik.bitcoinscodec.structures._
 
-class TxSpec extends CodecSuite {
+class RegularTxSpec extends CodecSuite {
 
-  import Tx._
+  import RegularTx._
 
   val bytes = hex"""
 01 00 00 00 01 6D BD DB 
@@ -33,12 +33,12 @@ CD 1C BE A6 E7 45 8A 7A  BA D5 12 A9 D9 EA 1A FB
   "Tx codec" should {
 
     "roundtrip" in {
-      val tx1 = Tx(
+      val tx1 = RegularTx(
         1L,
         List(),
         List(),
         12345L)
-      roundtrip(Tx.codec(1), tx1)
+      roundtrip(RegularTx.codec(1), tx1)
       roundtrip(Message.codec(0xDAB5BFFAL, 1), tx1)
 
     }
@@ -53,17 +53,17 @@ CD 1C BE A6 E7 45 8A 7A  BA D5 12 A9 D9 EA 1A FB
           4294967295L))
 
       val txouts = List(
-        TxOut(
+        RegularTxOut(
           4632880204564398080L,
           hex"76a9141aa0cd1cbea6e7458a7abad512a9d9ea1afb225e88ac"),
-        TxOut(
+        RegularTxOut(
           -9152746251769348096L,
           hex"76a9140eab5bea436a0484cfab12485efda0b78b4ecc5288ac"))
       val locktime = 0L
 
-      val tx = Tx(version, txins, txouts, locktime)
+      val tx = RegularTx(version, txins, txouts, locktime)
 
-      shouldDecodeFullyTo(Tx.codec(1), bytes.toBitVector, tx)
+      shouldDecodeFullyTo(RegularTx.codec(1), bytes.toBitVector, tx)
     }
 
   }

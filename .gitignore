@@ -24,3 +24,7 @@ project/plugins/project/
 .classpath
 .project
 .settings/
+
+# Intellij
+.idea
+.idea_modules/
